@@ -1,0 +1,20 @@
+# AI Spam Message Detector 🚫📩
+
+A simple AI-based spam detection web app built using:
+
+- Python (Flask)
+- Machine Learning (TF-IDF + Naive Bayes)
+- Tailwind CSS
+- HTML & JavaScript
+
+## Features
+- Detects spam messages instantly
+- Clean and modern UI
+- Fast and lightweight
+- Hackathon-ready
+
+## How to Run
+```bash
+pip3 install flask flask-cors scikit-learn
+python3 app.py
+

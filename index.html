@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Spam Detector</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-500 to-purple-600 min-h-screen flex items-center justify-center">
+
+    <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
+        
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-4">
+            📩 AI Spam Message Detector
+        </h1>
+
+        <p class="text-sm text-gray-500 text-center mb-6">
+            Enter an SMS or Email to check if it's spam
+        </p>
+
+        <textarea
+            id="msg"
+            rows="5"
+            placeholder="Type your message here..."
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        ></textarea>
+
+        <button
+            onclick="checkSpam()"
+            class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200"
+        >
+            Check Spam
+        </button>
+
+        <div
+            id="result"
+            class="mt-6 text-center text-lg font-semibold"
+        ></div>
+
+    </div>
+
+    <script>
+        function checkSpam() {
+            const message = document.getElementById("msg").value;
+
+            fetch("http://localhost:5000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const resultDiv = document.getElementById("result");
+
+                resultDiv.innerText = data.result;
+
+                if (data.result.includes("Spam")) {
+                    resultDiv.className = "mt-6 text-center text-lg font-semibold text-red-600";
+                } else {
+                    resultDiv.className = "mt-6 text-center text-lg font-semibold text-green-600";
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
