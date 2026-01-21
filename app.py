@@ -2,11 +2,26 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
+from dotenv import load_dotenv
+import os
+
+# ✅ Load environment variables from .env
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Tiny training data (for hackathon demo)
+# ✅ Get API key safely
+API_KEY = os.getenv("API_KEY")
+
+if not API_KEY:
+    print("⚠️ API_KEY not found (OK for ML-only app)")
+else:
+    print("✅ API_KEY loaded successfully")
+
+# -------------------------------
+# Tiny training data (Hackathon demo)
+# -------------------------------
 messages = [
     "Win cash now",
     "Congratulations you won a prize",
@@ -24,9 +39,14 @@ X = vectorizer.fit_transform(messages)
 model = MultinomialNB()
 model.fit(X, labels)
 
+# -------------------------------
+# API Route
+# -------------------------------
 @app.route("/predict", methods=["POST"])
 def predict():
-    msg = request.json["message"]
+    data = request.json
+    msg = data.get("message", "")
+
     vector = vectorizer.transform([msg])
     prediction = model.predict(vector)[0]
 
@@ -34,5 +54,11 @@ def predict():
         "result": "Spam 🚫" if prediction == 1 else "Not Spam ✅"
     })
 
+# -------------------------------
+# Run App (Render-ready)
+# -------------------------------
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    import os
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)
+
