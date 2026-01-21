@@ -57,6 +57,10 @@ def predict():
 # -------------------------------
 # Run App (Render-ready)
 # -------------------------------
+@app.route("/")
+def home():
+    return "AI Spam Detector Backend is Running 🚀"
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 10000))
